@@ -1,7 +1,6 @@
 module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-
         less: {
             development: {
                 files: {
@@ -17,20 +16,6 @@ module.exports = function(grunt) {
                 }
             }
         },
-
-        copy: {
-            dev: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: 'src/scripts/',
-                        src: ['**/*.js'],
-                        dest: 'dev/scripts/'
-                    }
-                ]
-            }
-        },
-
         watch: {
             less: {
                 files: ['src/styles/**/*.less'],
@@ -39,13 +24,8 @@ module.exports = function(grunt) {
             html: {
                 files: ['src/index.html'],
                 tasks: ['replace:dev']
-            },
-            js: {
-                files: ['src/scripts/**/*.js'],
-                tasks: ['copy:dev']
             }
         },
-
         replace: {
             dev: {
                 options: {
@@ -56,7 +36,7 @@ module.exports = function(grunt) {
                         },
                         {
                             match: 'ENDERECO_DO_JS',
-                            replacement: './scripts/main.js'
+                            replacement: '../src/scripts/main.js'
                         }
                     ]
                 },
@@ -78,7 +58,7 @@ module.exports = function(grunt) {
                         },
                         {
                             match: 'ENDERECO_DO_JS',
-                            replacement: './scripts/main.min.js'
+                            replacement: './scripts/main.js'
                         }
                     ]
                 },
@@ -92,7 +72,6 @@ module.exports = function(grunt) {
                 ]
             }
         },
-
         htmlmin: {
             dist: {
                 options: {
@@ -104,25 +83,15 @@ module.exports = function(grunt) {
                 }
             }
         },
-
-        clean: ['prebuild'],
-        uglify: {
-            target: {
-                files: {
-                    'dist/scripts/main.min.js' : 'src/scripts/main.js'
-                }
-            }
-        }
+        clean: ['prebuild']
     });
 
     grunt.loadNpmTasks('grunt-contrib-less');
-    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-replace');
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
     grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
 
-    grunt.registerTask('default', ['less:development', 'replace:dev', 'copy:dev', 'watch']);
-    grunt.registerTask('build', ['less:production', 'htmlmin:dist', 'replace:dist', 'clean', 'uglify']);
+    grunt.registerTask('default', ['watch']);
+    grunt.registerTask('build', ['less:production', 'htmlmin:dist', 'replace:dist', 'clean']);
 };
